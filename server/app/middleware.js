@@ -3,13 +3,13 @@ import _ from 'lodash'
 
 import app from './express'
 import { APP_DOMAIN } from '../app/config'
-import log, { deSequelize } from '../lib/logger'
-import actionNotifier from '../lib/notify'
+import log, { deSequelize } from '../../lib/logger'
+import actionNotifier from '../../lib/notify'
 import { Promises, Users } from '../models'
 
-import { parsePromise, parsePromiseWithIp } from '../lib/parse/promise'
-import isValidUrl, { isBotFromUserAgent } from '../lib/parse/url'
-import { nextCloseOfBusiness } from '../lib/parse/time'
+import { parsePromise, parsePromiseWithIp } from '../../lib/parse/promise'
+import isValidUrl, { isBotFromUserAgent } from '../../lib/parse/url'
+import { nextCloseOfBusiness } from '../../lib/parse/time'
 
 const pageWithStatus = ({
   message, reason = {}, res = {}, template, status
@@ -91,8 +91,8 @@ app.param('urtext', function(req, res, next) {
 
       return pageWithStatus({
         template: 'autocaptcha',
-        status: 404,
-        message: 'executing ajax request',
+        status: 401, // send unauthorized instead of not found
+        message: 'promise has not been validated',
         reason: { username, urtext },
         res
       })
